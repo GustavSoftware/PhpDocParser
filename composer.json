@@ -1,0 +1,30 @@
+{
+  "name": "gustav/phpdocparser",
+  "description": "A simple parser for PHPDoc comments.",
+  "minimum-stability": "stable",
+  "license": "GPL-3.0-only",
+  "authors": [
+    {
+      "name": "Chris Köcher",
+      "email": "ckone@fieselschweif.de"
+    }
+  ],
+  "require": {
+    "php": "^7.4",
+    "gustav/lexer": "^0.5",
+    "ext-ctype": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Gustav\\PhpDocParser\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Gustav\\PhpDocParser\\Tests\\": "tests/"
+    }
+  }
+}
