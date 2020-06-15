@@ -1072,7 +1072,7 @@ class Parser
             $this->_screener->setPosition($position);
             $link = "";
             while($token = $this->_screener->getToken()) {
-                if($token->getType() == Lexer::T_WHITESPACE) {
+                if(in_array($token->getType(), [Lexer::T_WHITESPACE, Lexer::T_OUTRO])) {
                     break;
                 }
                 $link .= $token->getValue();

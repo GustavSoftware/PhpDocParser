@@ -222,8 +222,8 @@ class ParserTest extends TestCase
     public function testParseCopyrightTag(): void
     {
         $goodStrings = [
-            ["@copyright Gustav Software */", new CopyrightTag("Gustav Software", [])],
-            ["@copyright Gustav Software {@link https://gustav.fieselschweif.de} */", new CopyrightTag(
+            ["@copyright Gustav Software", new CopyrightTag("Gustav Software", [])],
+            ["@copyright Gustav Software {@link https://gustav.fieselschweif.de}", new CopyrightTag(
                 "Gustav Software {{{{0}}}}",
                 [new LinkTag("https://gustav.fieselschweif.de", "", [])]
             )]
@@ -238,10 +238,10 @@ class ParserTest extends TestCase
     public function testParseDeprecatedTag(): void
     {
         $goodStrings = [
-            ["@deprecated */", new DeprecatedTag("", "", [])],
-            ["@deprecated 1.0.0 */", new DeprecatedTag("1.0.0", "", [])],
-            ["@deprecated Some description */", new DeprecatedTag("", "Some description", [])],
-            ["@deprecated 1.0.0 Some description */", new DeprecatedTag("1.0.0", "Some description", [])]
+            ["@deprecated", new DeprecatedTag("", "", [])],
+            ["@deprecated 1.0.0", new DeprecatedTag("1.0.0", "", [])],
+            ["@deprecated Some description", new DeprecatedTag("", "Some description", [])],
+            ["@deprecated 1.0.0 Some description", new DeprecatedTag("1.0.0", "Some description", [])]
         ];
         $badStrings = [
             ["@api"]
@@ -269,7 +269,7 @@ class ParserTest extends TestCase
     public function testParseInternalTag(): void
     {
         $goodStrings = [
-            ["@internal Some description */", new InternalTag("Some description", []), [false]],
+            ["@internal Some description", new InternalTag("Some description", []), [false]],
             ["{@internal Some description}", new InternalTag("Some description", []), [true]],
             ["{@internal Some description {@link https://www.fieselschweif.de Text}}", new InternalTag(
                 "Some description {{{{0}}}}",
@@ -278,7 +278,7 @@ class ParserTest extends TestCase
         ];
         $badStrings = [
             ["@api", [false]],
-            ["@internal Some description */", [true]],
+            ["@internal Some description", [true]],
             ["{@internal Some description}", [false]],
             ["{@internal Some description {@link https://www.fieselschweif.de Text}", [true]]
         ];
@@ -289,16 +289,16 @@ class ParserTest extends TestCase
     public function testParseLinkTag(): void
     {
         $goodStrings = [
-            ["@link https://www.fieselschweif.de */", new LinkTag("https://www.fieselschweif.de", "", []), [false]],
+            ["@link https://www.fieselschweif.de", new LinkTag("https://www.fieselschweif.de", "", []), [false]],
             ["{@link https://www.fieselschweif.de}", new LinkTag("https://www.fieselschweif.de", "", []), [true]],
-            ["@link https://www.fieselschweif.de Some description */", new LinkTag("https://www.fieselschweif.de", "Some description", []), [false]],
+            ["@link https://www.fieselschweif.de Some description", new LinkTag("https://www.fieselschweif.de", "Some description", []), [false]],
             ["{@link https://www.fieselschweif.de Some description}", new LinkTag("https://www.fieselschweif.de", "Some description", []), [true]]
         ];
         $badStrings = [
             ["@api", [false]],
             ["@link Some description", [false]],
             ["{@link Some description}", [true]],
-            ["@link https://www.fieselschweif.de */", [true]],
+            ["@link https://www.fieselschweif.de", [true]],
             ["{@link https://www.fieselschweif.de}", [false]]
         ];
 
@@ -308,31 +308,31 @@ class ParserTest extends TestCase
     public function testParseMethodTag(): void
     {
         $goodStrings = [
-            ["@method \\foo\\bar myMethod() Some description */", new MethodTag("\\foo\\bar", "myMethod", [], "Some description", [])],
-            ["@method myMethod() Some description */", new MethodTag("void", "myMethod", [], "Some description", [])],
+            ["@method \\foo\\bar myMethod() Some description", new MethodTag("\\foo\\bar", "myMethod", [], "Some description", [])],
+            ["@method myMethod() Some description", new MethodTag("void", "myMethod", [], "Some description", [])],
             [
-                "@method \\foo\\bar myMethod(int \$test, string \$test2) Some description */",
+                "@method \\foo\\bar myMethod(int \$test, string \$test2) Some description",
                 new MethodTag("\\foo\\bar", "myMethod", [
                     ['type' => "int", 'name' => "\$test"],
                     ['type' => "string", 'name' => "\$test2"]
                 ], "Some description", [])
             ],
             [
-                "@method \\foo\\bar myMethod(int|string[] \$test) Some description */",
+                "@method \\foo\\bar myMethod(int|string[] \$test) Some description",
                 new MethodTag("\\foo\\bar", "myMethod", [
                     ['type' => "int|string[]", 'name' => "\$test"]
                 ], "Some description", [])
             ],
             [
-                "@method \\foo\\bar myMethod(\$test, \$test2) Some description */",
+                "@method \\foo\\bar myMethod(\$test, \$test2) Some description",
                 new MethodTag("\\foo\\bar", "myMethod", [
                     ['type' => "mixed", 'name' => "\$test"],
                     ['type' => "mixed", 'name' => "\$test2"]
                 ], "Some description", [])
             ],
-            ["@method myMethod() */", new MethodTag("void", "myMethod", [], "", [])],
+            ["@method myMethod()", new MethodTag("void", "myMethod", [], "", [])],
             [
-                "@method \\foo\\bar myMethod(\$test, \$test2,) Some description */",
+                "@method \\foo\\bar myMethod(\$test, \$test2,) Some description",
                 new MethodTag("\\foo\\bar", "myMethod", [
                     ['type' => "mixed", 'name' => "\$test"],
                     ['type' => "mixed", 'name' => "\$test2"]
@@ -341,10 +341,10 @@ class ParserTest extends TestCase
         ];
         $badStrings = [
             ["@api"],
-            ["@method \\foo\\bar */"],
-            ["@method \\foo\\bar myMethod */"],
-            ["@method \\foo\\bar myMethod(int \$test */"],
-            ["@method \\foo\\bar myMethod(int test) */"]
+            ["@method \\foo\\bar"],
+            ["@method \\foo\\bar myMethod"],
+            ["@method \\foo\\bar myMethod(int \$test"],
+            ["@method \\foo\\bar myMethod(int test)"]
         ];
 
         $this->_testMethod("_parseMethodTag", $goodStrings, $badStrings);
@@ -369,11 +369,11 @@ class ParserTest extends TestCase
     public function testParseParamTag(): void
     {
         $goodStrings = [
-            ["@param \\foo\\bar \$baz Some description */", new ParamTag("\\foo\\bar", "\$baz", "Some description", [])],
-            ["@param int|string[] \$baz Some description */", new ParamTag("int|string[]", "\$baz", "Some description", [])],
-            ["@param \$baz Some description */", new ParamTag("mixed", "\$baz", "Some description", [])],
-            ["@param \$baz */", new ParamTag("mixed", "\$baz", "", [])],
-            ["@param \\foo\\bar Some description */", new ParamTag("\\foo\\bar", "", "Some description", [])]
+            ["@param \\foo\\bar \$baz Some description", new ParamTag("\\foo\\bar", "\$baz", "Some description", [])],
+            ["@param int|string[] \$baz Some description", new ParamTag("int|string[]", "\$baz", "Some description", [])],
+            ["@param \$baz Some description", new ParamTag("mixed", "\$baz", "Some description", [])],
+            ["@param \$baz", new ParamTag("mixed", "\$baz", "", [])],
+            ["@param \\foo\\bar Some description", new ParamTag("\\foo\\bar", "", "Some description", [])]
         ];
         $badStrings = [
             ["@api"]
@@ -385,23 +385,23 @@ class ParserTest extends TestCase
     public function testParsePropertyTag(): void
     {
         $goodStrings = [
-            ["@property \\foo\\bar \$baz Some description */", new PropertyTag(
+            ["@property \\foo\\bar \$baz Some description", new PropertyTag(
                 PropertyTag::T_READ|PropertyTag::T_WRITE, "\\foo\\bar", "\$baz", "Some description", []
             )],
-            ["@property-read \\foo\\bar \$baz Some description */", new PropertyTag(
+            ["@property-read \\foo\\bar \$baz Some description", new PropertyTag(
                 PropertyTag::T_READ, "\\foo\\bar", "\$baz", "Some description", []
             )],
-            ["@property-write \\foo\\bar \$baz Some description */", new PropertyTag(
+            ["@property-write \\foo\\bar \$baz Some description", new PropertyTag(
                 PropertyTag::T_WRITE, "\\foo\\bar", "\$baz", "Some description", []
             )],
-            ["@property \$baz Some description */", new PropertyTag(
+            ["@property \$baz Some description", new PropertyTag(
                 PropertyTag::T_READ|PropertyTag::T_WRITE, "mixed", "\$baz", "Some description", []
             )]
         ];
         $badStrings = [
             ["@api"],
-            ["@property \\foo\\bar Some description */"],
-            ["@property foo\\\\bar \$baz Some description */"]
+            ["@property \\foo\\bar Some description"],
+            ["@property foo\\\\bar \$baz Some description"]
         ];
 
         $this->_testMethod("_parsePropertyTag", $goodStrings, $badStrings);
@@ -410,13 +410,13 @@ class ParserTest extends TestCase
     public function testParseReturnTag(): void
     {
         $goodStrings = [
-            ["@return \\foo\\bar Some description */", new ReturnTag("\\foo\\bar", "Some description", [])],
-            ["@return int|string[] Some description */", new ReturnTag("int|string[]", "Some description", [])],
-            ["@return \\foo\\bar */", new ReturnTag("\\foo\\bar", "", [])]
+            ["@return \\foo\\bar Some description", new ReturnTag("\\foo\\bar", "Some description", [])],
+            ["@return int|string[] Some description", new ReturnTag("int|string[]", "Some description", [])],
+            ["@return \\foo\\bar", new ReturnTag("\\foo\\bar", "", [])]
         ];
         $badStrings = [
             ["@api"],
-            ["@return 123test Some description */"]
+            ["@return 123test Some description"]
         ];
 
         $this->_testMethod("_parseReturnTag", $goodStrings, $badStrings);
@@ -425,14 +425,14 @@ class ParserTest extends TestCase
     public function testParseSeeTag(): void
     {
         $goodStrings = [
-            ["@see \\foo\\bar::\$_string */", new SeeTag("\\foo\\bar::\$_string", "", [])],
-            ["@see \\test\\myFunction() Some description */", new SeeTag("\\test\\myFunction()", "Some description", [])],
-            ["@see https://www.fieselschweif.de Some description */", new SeeTag("https://www.fieselschweif.de", "Some description", [])]
+            ["@see \\foo\\bar::\$_string", new SeeTag("\\foo\\bar::\$_string", "", [])],
+            ["@see \\test\\myFunction() Some description", new SeeTag("\\test\\myFunction()", "Some description", [])],
+            ["@see https://www.fieselschweif.de Some description", new SeeTag("https://www.fieselschweif.de", "Some description", [])]
         ];
         $badStrings = [
             ["@api"],
-            ["@see \\123test\\foo Some description */"],
-            ["@see https//www.fieselschweif.de */"]
+            ["@see \\123test\\foo Some description"],
+            ["@see https//www.fieselschweif.de"]
         ];
 
         $this->_testMethod("_parseSeeTag", $goodStrings, $badStrings);
@@ -441,15 +441,15 @@ class ParserTest extends TestCase
     public function testParseSinceTag(): void
     {
         $goodStrings = [
-            ["@since 1.0.0 Some description */", new SinceTag("1.0.0", "Some description", [])],
-            ["@since git: $123abc$ Some description */", new SinceTag("git: $123abc$", "Some description", [])],
-            ["@since @package_version@ Some description */", new SinceTag("@package_version@", "Some description", [])],
-            ["@since v1.0.0 */", new SinceTag("v1.0.0", "", [])]
+            ["@since 1.0.0 Some description", new SinceTag("1.0.0", "Some description", [])],
+            ["@since git: $123abc$ Some description", new SinceTag("git: $123abc$", "Some description", [])],
+            ["@since @package_version@ Some description", new SinceTag("@package_version@", "Some description", [])],
+            ["@since v1.0.0", new SinceTag("v1.0.0", "", [])]
         ];
         $badStrings = [
             ["@api"],
-            ["@since Some description */"],
-            ["@since git: 123 Some description */"]
+            ["@since Some description"],
+            ["@since git: 123 Some description"]
         ];
 
         $this->_testMethod("_parseSinceTag", $goodStrings, $badStrings);
@@ -458,13 +458,13 @@ class ParserTest extends TestCase
     public function testParseThrowsTag(): void
     {
         $goodStrings = [
-            ["@throws MyException Some description */", new ThrowsTag("MyException", "Some description", [])],
-            ["@throws \\foo\\MyException Some description */", new ThrowsTag("\\foo\\MyException", "Some description", [])],
-            ["@throws MyException */", new ThrowsTag("MyException", "", [])]
+            ["@throws MyException Some description", new ThrowsTag("MyException", "Some description", [])],
+            ["@throws \\foo\\MyException Some description", new ThrowsTag("\\foo\\MyException", "Some description", [])],
+            ["@throws MyException", new ThrowsTag("MyException", "", [])]
         ];
         $badString = [
             ["@api"],
-            ["@throws 123abc Some description */"]
+            ["@throws 123abc Some description"]
         ];
 
         $this->_testMethod("_parseThrowsTag", $goodStrings, $badString);
@@ -473,8 +473,8 @@ class ParserTest extends TestCase
     public function testParseTodoTag(): void
     {
         $goodStrings = [
-            ["@todo */", new TodoTag("", [])],
-            ["@todo Some description */", new TodoTag("Some description", [])]
+            ["@todo", new TodoTag("", [])],
+            ["@todo Some description", new TodoTag("Some description", [])]
         ];
         $badStrings = [
             ["@api"]
@@ -486,14 +486,14 @@ class ParserTest extends TestCase
     public function testParseUsesTag(): void
     {
         $goodStrings = [
-            ["@uses /some/path/to/file.php Some description */", new UsesTag("/some/path/to/file.php", "Some description", [])],
-            ["@uses \\foo\\bar Some description */", new UsesTag("\\foo\\bar", "Some description", [])],
-            ["@uses foo::\$_bar Some description */", new UsesTag("foo::\$_bar", "Some description", [])],
-            ["@uses /some/path/to/file.php */", new UsesTag("/some/path/to/file.php", "", [])]
+            ["@uses /some/path/to/file.php Some description", new UsesTag("/some/path/to/file.php", "Some description", [])],
+            ["@uses \\foo\\bar Some description", new UsesTag("\\foo\\bar", "Some description", [])],
+            ["@uses foo::\$_bar Some description", new UsesTag("foo::\$_bar", "Some description", [])],
+            ["@uses /some/path/to/file.php", new UsesTag("/some/path/to/file.php", "", [])]
         ];
         $badStrings = [
             ["@api"],
-            ["@uses foo::\$_bar() Some description */"]
+            ["@uses foo::\$_bar() Some description"]
         ];
 
         $this->_testMethod("_parseUsesTag", $goodStrings, $badStrings);
@@ -502,12 +502,12 @@ class ParserTest extends TestCase
     public function testParseVarTag(): void
     {
         $goodStrings = [
-            ["@var int */", new VarTag("int", "", "", [])],
-            ["@var int|string[] */", new VarTag("int|string[]", "", "", [])],
-            ["@var int|string[] Some description */", new VarTag("int|string[]", "", "Some description", [])],
-            ["@var int|string[] \$foo */", new VarTag("int|string[]", "\$foo", "", [])],
-            ["@var int|string[] \$foo Some description */", new VarTag("int|string[]", "\$foo", "Some description", [])],
-            ["@var \$foo Some description */", new VarTag("mixed", "\$foo", "Some description", [])]
+            ["@var int", new VarTag("int", "", "", [])],
+            ["@var int|string[]", new VarTag("int|string[]", "", "", [])],
+            ["@var int|string[] Some description", new VarTag("int|string[]", "", "Some description", [])],
+            ["@var int|string[] \$foo", new VarTag("int|string[]", "\$foo", "", [])],
+            ["@var int|string[] \$foo Some description", new VarTag("int|string[]", "\$foo", "Some description", [])],
+            ["@var \$foo Some description", new VarTag("mixed", "\$foo", "Some description", [])]
         ];
         $badStrings = [
             ["@api"]
@@ -519,9 +519,9 @@ class ParserTest extends TestCase
     public function testVersionTag(): void
     {
         $goodStrings = [
-            ["@version 1.0.0 Some description */", new VersionTag("1.0.0", "Some description", [])],
-            ["@version 1.0.0 */", new VersionTag("1.0.0", "", [])],
-            ["@version git: $123abc$ Some description */", new VersionTag("git: $123abc$", "Some description", [])]
+            ["@version 1.0.0 Some description", new VersionTag("1.0.0", "Some description", [])],
+            ["@version 1.0.0", new VersionTag("1.0.0", "", [])],
+            ["@version git: $123abc$ Some description", new VersionTag("git: $123abc$", "Some description", [])]
         ];
         $badStrings = [
             ["@api"],
@@ -617,8 +617,8 @@ class ParserTest extends TestCase
         $method->setAccessible(true);
 
         foreach($goodStrings as $string) {
-            $this->_screener->setValue($this->_parser, new Screener($string[0]." ")); //note: the type parser stops on first whitespace!
-            $this->_comment->setValue($this->_parser, $string[0]." ");
+            $this->_screener->setValue($this->_parser, new Screener($string[0]." */")); //note: the type parser stops on first whitespace or outro!
+            $this->_comment->setValue($this->_parser, $string[0]." */");
             if(isset($string[2]) && is_array($string[2])) {
                 $value = $method->invokeArgs($this->_parser, $string[2]);
             } else {
@@ -628,8 +628,8 @@ class ParserTest extends TestCase
         }
 
         foreach($badStrings as $string) {
-            $this->_screener->setValue($this->_parser, new Screener($string[0]." ")); //note: the type parser stops on first whitespace!
-            $this->_comment->setValue($this->_parser, $string[0]." ");
+            $this->_screener->setValue($this->_parser, new Screener($string[0]." */")); //note: the type parser stops on first whitespace or outro!
+            $this->_comment->setValue($this->_parser, $string[0]." */");
             $catched = false;
             try {
                 if(isset($string[1]) && is_array($string[1])) {
