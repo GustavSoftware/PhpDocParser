@@ -43,6 +43,7 @@ use Gustav\PhpDocParser\Tags\SeeTag;
 use Gustav\PhpDocParser\Tags\SinceTag;
 use Gustav\PhpDocParser\Tags\ThrowsTag;
 use Gustav\PhpDocParser\Tags\TodoTag;
+use Gustav\PhpDocParser\Tags\UsedByTag;
 use Gustav\PhpDocParser\Tags\UsesTag;
 use Gustav\PhpDocParser\Tags\VarTag;
 use Gustav\PhpDocParser\Tags\VersionTag;
@@ -481,6 +482,22 @@ class ParserTest extends TestCase
         ];
 
         $this->_testMethod("_parseTodoTag", $goodStrings, $badStrings);
+    }
+
+    public function testParseUsedByTag(): void
+    {
+        $goodStrings = [
+            ["@used-by /some/path/to/file.php Some description", new UsedByTag("/some/path/to/file.php", "Some description", [])],
+            ["@used-by \\foo\\bar Some description", new UsedByTag("\\foo\\bar", "Some description", [])],
+            ["@used-by foo::\$_bar Some description", new UsedByTag("foo::\$_bar", "Some description", [])],
+            ["@used-by /some/path/to/file.php", new UsedByTag("/some/path/to/file.php", "", [])]
+        ];
+        $badStrings = [
+            ["@api"],
+            ["@used-by foo::\$_bar() Some description"]
+        ];
+
+        $this->_testMethod("_parseUsedByTag", $goodStrings, $badStrings);
     }
 
     public function testParseUsesTag(): void

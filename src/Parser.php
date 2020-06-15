@@ -43,6 +43,7 @@ use Gustav\PhpDocParser\Tags\SeeTag;
 use Gustav\PhpDocParser\Tags\SinceTag;
 use Gustav\PhpDocParser\Tags\ThrowsTag;
 use Gustav\PhpDocParser\Tags\TodoTag;
+use Gustav\PhpDocParser\Tags\UsedByTag;
 use Gustav\PhpDocParser\Tags\UsesTag;
 use Gustav\PhpDocParser\Tags\VarTag;
 use Gustav\PhpDocParser\Tags\VersionTag;
@@ -91,8 +92,8 @@ class Parser
         Lexer::T_API_TAG, Lexer::T_AUTHOR_TAG, Lexer::T_COPYRIGHT_TAG, Lexer::T_DEPRECATED_TAG, Lexer::T_INHERITDOC_TAG,
         Lexer::T_INTERNAL_TAG, Lexer::T_LINK_TAG, Lexer::T_METHOD_TAG, Lexer::T_PACKAGE_TAG, Lexer::T_PARAM_TAG,
         Lexer::T_PROPERTY_TAG, Lexer::T_PROPERTY_READ_TAG, Lexer::T_PROPERTY_WRITE_TAG, Lexer::T_RETURN_TAG,
-        Lexer::T_SEE_TAG, Lexer::T_SINCE_TAG, Lexer::T_THROWS_TAG, Lexer::T_TODO_TAG, Lexer::T_USES_TAG,
-        Lexer::T_VAR_TAG, Lexer::T_VERSION_TAG
+        Lexer::T_SEE_TAG, Lexer::T_SINCE_TAG, Lexer::T_THROWS_TAG, Lexer::T_TODO_TAG, Lexer::T_USED_BY_TAG,
+        Lexer::T_USES_TAG, Lexer::T_VAR_TAG, Lexer::T_VERSION_TAG
     ];
 
     /**
@@ -137,13 +138,14 @@ class Parser
 
         $description = "";
         $inlineTags = $authorTags = $copyrightTags = $internalTags = $linkTags = $methodTags = $paramTags
-            = $propertyTags = $seeTags = $sinceTags = $throwsTags = $todoTags = $usesTags = $versionTags = [];
+            = $propertyTags = $seeTags = $sinceTags = $throwsTags = $todoTags = $usedByTags = $usesTags = $versionTags
+            = [];
 
         $this->_parseComment(
             $class->getDocComment(), $description, $inlineTags, $apiTag, $authorTags, $copyrightTags,
             $deprecatedTag, $inheritDocTag, $internalTags, $linkTags, $methodTags, $packageTag,
             $paramTags, $propertyTags, $returnTag, $seeTags, $sinceTags, $throwsTags, $todoTags,
-            $usesTags, $varTags, $versionTags
+            $usedByTags, $usesTags, $varTag, $versionTags
         );
 
         $constants = $properties = $methods = [];
@@ -182,13 +184,13 @@ class Parser
             return new InterfaceData(
                 $class, $constants, $methods, $methodTags, $packageTag, $description, $inlineTags, $apiTag, $authorTags,
                 $copyrightTags, $deprecatedTag, $inheritDocTag, $internalTags, $linkTags, $seeTags, $sinceTags,
-                $todoTags, $usesTags, $versionTags
+                $todoTags, $usedByTags, $usesTags, $versionTags
             );
         } else {
             return new ClassData(
                 $class, $constants, $methods, $methodTags, $properties, $propertyTags, $packageTag, $description,
                 $inlineTags, $apiTag, $authorTags, $copyrightTags, $deprecatedTag, $inheritDocTag, $internalTags,
-                $linkTags, $seeTags, $sinceTags, $todoTags, $usesTags, $versionTags
+                $linkTags, $seeTags, $sinceTags, $todoTags, $usedByTags, $usesTags, $versionTags
             );
         }
     }
@@ -219,18 +221,20 @@ class Parser
 
         $description = "";
         $inlineTags = $authorTags = $copyrightTags = $internalTags = $linkTags = $methodTags = $paramTags
-            = $propertyTags = $seeTags = $sinceTags = $throwsTags = $todoTags = $usesTags = $versionTags = [];
+            = $propertyTags = $seeTags = $sinceTags = $throwsTags = $todoTags = $usedByTags = $usesTags = $versionTags
+            = [];
 
         $this->_parseComment(
             $constant->getDocComment(), $description, $inlineTags, $apiTag, $authorTags, $copyrightTags,
             $deprecatedTag, $inheritDocTag, $internalTags, $linkTags, $methodTags, $packageTag,
             $paramTags, $propertyTags, $returnTag, $seeTags, $sinceTags, $throwsTags, $todoTags,
-            $usesTags, $varTag, $versionTags
+            $usedByTags, $usesTags, $varTag, $versionTags
         );
 
         return new ConstantData(
             $constant, $varTag, $description, $inlineTags, $apiTag, $authorTags, $copyrightTags, $deprecatedTag,
-            $inheritDocTag, $internalTags, $linkTags, $seeTags, $sinceTags, $todoTags, $usesTags, $versionTags
+            $inheritDocTag, $internalTags, $linkTags, $seeTags, $sinceTags, $todoTags, $usedByTags, $usesTags,
+            $versionTags
         );
     }
 
@@ -260,18 +264,20 @@ class Parser
 
         $description = "";
         $inlineTags = $authorTags = $copyrightTags = $internalTags = $linkTags = $methodTags = $paramTags
-            = $propertyTags = $seeTags = $sinceTags = $throwsTags = $todoTags = $usesTags = $versionTags = [];
+            = $propertyTags = $seeTags = $sinceTags = $throwsTags = $todoTags = $usedByTags = $usesTags = $versionTags
+            = [];
 
         $this->_parseComment(
             $property->getDocComment(), $description, $inlineTags, $apiTag, $authorTags, $copyrightTags,
             $deprecatedTag, $inheritDocTag, $internalTags, $linkTags, $methodTags, $packageTag,
             $paramTags, $propertyTags, $returnTag, $seeTags, $sinceTags, $throwsTags, $todoTags,
-            $usesTags, $varTag, $versionTags
+            $usedByTags, $usesTags, $varTag, $versionTags
         );
 
         return new PropertyData(
             $property, $varTag, $description, $inlineTags, $apiTag, $authorTags, $copyrightTags, $deprecatedTag,
-            $inheritDocTag, $internalTags, $linkTags, $seeTags, $sinceTags, $todoTags, $usesTags, $versionTags
+            $inheritDocTag, $internalTags, $linkTags, $seeTags, $sinceTags, $todoTags, $usedByTags, $usesTags,
+            $versionTags
         );
     }
 
@@ -301,19 +307,20 @@ class Parser
 
         $description = "";
         $inlineTags = $authorTags = $copyrightTags = $internalTags = $linkTags = $methodTags = $paramTags
-            = $propertyTags = $seeTags = $sinceTags = $throwsTags = $todoTags = $usesTags = $versionTags = [];
+            = $propertyTags = $seeTags = $sinceTags = $throwsTags = $todoTags = $usedByTags = $usesTags = $versionTags
+            = [];
 
         $this->_parseComment(
             $method->getDocComment(), $description, $inlineTags, $apiTag, $authorTags, $copyrightTags,
             $deprecatedTag, $inheritDocTag, $internalTags, $linkTags, $methodTags, $packageTag,
             $paramTags, $propertyTags, $returnTag, $seeTags, $sinceTags, $throwsTags, $todoTags,
-            $usesTags, $varTag, $versionTags
+            $usedByTags, $usesTags, $varTag, $versionTags
         );
 
         return new MethodData(
             $method, $description, $inlineTags, $paramTags, $returnTag, $throwsTags, $apiTag, $authorTags,
             $copyrightTags, $deprecatedTag, $inheritDocTag, $internalTags, $linkTags, $seeTags, $sinceTags, $todoTags,
-            $usesTags, $versionTags
+            $usedByTags, $usesTags, $versionTags
         );
     }
 
@@ -339,17 +346,22 @@ class Parser
             throw ParserException::internalElement($function->getName());
         }
 
+        $description = "";
+        $inlineTags = $authorTags = $copyrightTags = $internalTags = $linkTags = $methodTags = $paramTags
+            = $propertyTags = $seeTags = $sinceTags = $throwsTags = $todoTags = $usedByTags = $usesTags = $versionTags
+            = [];
+
         $this->_parseComment(
             $function->getDocComment(), $description, $inlineTags, $apiTag, $authorTags, $copyrightTags,
             $deprecatedTag, $inheritDocTag, $internalTags, $linkTags, $methodTags, $packageTag,
             $paramTags, $propertyTags, $returnTag, $seeTags, $sinceTags, $throwsTags, $todoTags,
-            $usesTags, $varTag, $versionTags
+            $usedByTags, $usesTags, $varTag, $versionTags
         );
 
         return new FunctionData(
             $function, $description, $inlineTags, $paramTags, $returnTag, $throwsTags, $apiTag, $authorTags,
-            $copyrightTags, $deprecatedTag, $internalTags, $linkTags, $seeTags, $sinceTags, $todoTags, $usesTags,
-            $versionTags
+            $copyrightTags, $deprecatedTag, $internalTags, $linkTags, $seeTags, $sinceTags, $todoTags, $usedByTags,
+            $usesTags, $versionTags
         );
     }
 
@@ -394,6 +406,8 @@ class Parser
      *   The throws-tags
      * @param TodoTag[] $todoTags
      *   The todo-tags
+     * @param UsedByTag[] $usedByTags
+     *   The used-by-tags
      * @param UsesTag[] $usesTags
      *   The uses-tags
      * @param VarTag|null $varTag
@@ -408,7 +422,7 @@ class Parser
         array &$copyrightTags, ?DeprecatedTag &$deprecatedTag, ?InheritDocTag &$inheritDocTag, array &$internalTags,
         array &$linkTags, array &$methodTags, ?PackageTag &$packageTag, array &$paramTags, array &$propertyTags,
         ?ReturnTag &$returnTag, array &$seeTags, array &$sinceTags, array &$throwsTags, array &$todoTags,
-        array &$usesTags, ?VarTag &$varTag, array &$versionTags
+        array &$usedByTags, array &$usesTags, ?VarTag &$varTag, array &$versionTags
     ): void {
         $this->_comment = trim($comment);
         if($this->_comment) {
@@ -422,8 +436,8 @@ class Parser
             $this->_parseTags(
                 $apiTag, $authorTags, $copyrightTags, $deprecatedTag, $inheritDocTag,
                 $internalTags, $linkTags, $methodTags, $packageTag, $paramTags, $propertyTags,
-                $returnTag, $seeTags, $sinceTags, $throwsTags, $todoTags, $usesTags, $varTag,
-                $versionTags
+                $returnTag, $seeTags, $sinceTags, $throwsTags, $todoTags, $usedByTags, $usesTags,
+                $varTag, $versionTags
             );
 
             $this->_match(Lexer::T_OUTRO);
@@ -467,6 +481,8 @@ class Parser
      *   The throws-tags
      * @param TodoTag[] $todoTags
      *   The todo-tags
+     * @param UsedByTag[] $usedByTags
+     *   The used-by-tags
      * @param UsesTag[] $usesTags
      *   The uses-tags
      * @param VarTag|null $varTag
@@ -480,7 +496,8 @@ class Parser
         ?ApiTag &$apiTag, array &$authorTags, array &$copyrightTags, ?DeprecatedTag &$deprecatedTag,
         ?InheritDocTag &$inheritDocTag, array &$internalTags, array &$linkTags, array &$methodTags,
         ?PackageTag &$packageTag, array &$paramTags, array &$propertyTags, ?ReturnTag &$returnTag, array &$seeTags,
-        array &$sinceTags, array &$throwsTags, array &$todoTags, array &$usesTags, ?VarTag &$varTag, array &$versionTags
+        array &$sinceTags, array &$throwsTags, array &$todoTags, array &$usedByTags, array &$usesTags, ?VarTag &$varTag,
+        array &$versionTags
     ): void {
         while($this->_screener->isTokenAny(self::$_tags)) {
             switch($this->_screener->getToken()->getType()) {
@@ -533,6 +550,9 @@ class Parser
                     break;
                 case Lexer::T_TODO_TAG:
                     $todoTags[] = $this->_parseTodoTag();
+                    break;
+                case Lexer::T_USED_BY_TAG:
+                    $usedByTags[] = $this->_parseUsedByTag();
                     break;
                 case Lexer::T_USES_TAG:
                     $usesTags[] = $this->_parseUsesTag();
@@ -1053,6 +1073,25 @@ class Parser
     }
 
     /**
+     * Parses a used-by-tag.
+     *
+     * @return UsedByTag
+     *   The parsed tag
+     * @throws ParserException
+     *   Unexpected token, unexpected end, or invalid file name
+     */
+    private function _parseUsedByTag(): UsedByTag
+    {
+        $this->_match(Lexer::T_USED_BY_TAG);
+
+        $link = $description = "";
+        $inlineTags = [];
+
+        $this->_parseUsedByOrUsesTag($link, $description, $inlineTags);
+        return new UsedByTag($link, $description, $inlineTags);
+    }
+
+    /**
      * Parses a uses-tag.
      *
      * @return UsesTag
@@ -1063,6 +1102,28 @@ class Parser
     private function _parseUsesTag(): UsesTag
     {
         $this->_match(Lexer::T_USES_TAG);
+
+        $link = $description = "";
+        $inlineTags = [];
+
+        $this->_parseUsedByOrUsesTag($link, $description, $inlineTags);
+        return new UsesTag($link, $description, $inlineTags);
+    }
+
+    /**
+     * Parses the body of a used-by- or uses-tag.
+     *
+     * @param string $link
+     *   The structural element or file name
+     * @param string $description
+     *   The description
+     * @param ATag[] $inlineTags
+     *   The inline Tags
+     * @throws ParserException
+     *   Unexpected token, unexpected end, or invalid file name
+     */
+    private function _parseUsedByOrUsesTag(string &$link, string &$description, array &$inlineTags): void
+    {
         $this->_screener->skipWhile(Lexer::T_WHITESPACE);
         $position = $this->_screener->getPosition();
 
@@ -1085,9 +1146,7 @@ class Parser
         }
 
         $this->_screener->skipWhile(Lexer::T_WHITESPACE);
-        $inlineTags = [];
         $description = $this->_parseDescription($inlineTags, false);
-        return new UsesTag($link, $description, $inlineTags);
     }
 
     /**

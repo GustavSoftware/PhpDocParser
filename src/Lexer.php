@@ -81,8 +81,9 @@ class Lexer extends ALexer
     public const T_THROWS_TAG = 46;
     public const T_TODO_TAG = 47;
     public const T_USES_TAG = 48;
-    public const T_VAR_TAG = 49;
-    public const T_VERSION_TAG = 50;
+    public const T_USED_BY_TAG = 49;
+    public const T_VAR_TAG = 50;
+    public const T_VERSION_TAG = 51;
 
     /**
      * @inheritDoc
@@ -90,8 +91,7 @@ class Lexer extends ALexer
     protected function _getCatchablePatterns(): array
     {
         return [
-//            '[a-z_\\\\][a-z0-9_\:\\\\]*[a-z0-9_]{1}',
-            '\p{L}+'
+            '\p{L}+' //do not split strings
         ];
     }
 

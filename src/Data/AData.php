@@ -30,6 +30,7 @@ use Gustav\PhpDocParser\Tags\LinkTag;
 use Gustav\PhpDocParser\Tags\SeeTag;
 use Gustav\PhpDocParser\Tags\SinceTag;
 use Gustav\PhpDocParser\Tags\TodoTag;
+use Gustav\PhpDocParser\Tags\UsedByTag;
 use Gustav\PhpDocParser\Tags\UsesTag;
 use Gustav\PhpDocParser\Tags\VersionTag;
 use Reflector;
@@ -129,6 +130,13 @@ abstract class AData
     private array $_todo;
 
     /**
+     * The used-by-tags.
+     *
+     * @var UsedByTag[]
+     */
+    private array $_usedBy;
+
+    /**
      * The uses-tags.
      *
      * @var UsesTag[]
@@ -169,6 +177,8 @@ abstract class AData
      *   The since-tags
      * @param TodoTag[] $todo
      *   The todo-tags
+     * @param UsedByTag[] $usedBy
+     *   The used-by-tags
      * @param UsesTag[] $uses
      *   The uses-tags
      * @param VersionTag[] $version
@@ -177,7 +187,7 @@ abstract class AData
     public function __construct(
         string $description = "", array $inlineTags = [], ?ApiTag $api = null, array $author = [], array $copyright = [],
         ?DeprecatedTag $deprecated = null, ?InheritDocTag $inheritDoc = null, array $internal = [], array $link = [],
-        array $see = [], array $since = [], array $todo = [], array $uses = [], array $version = []
+        array $see = [], array $since = [], array $todo = [], array $usedBy = [], array $uses = [], array $version = []
     ) {
         $this->_description = trim($description);
         $this->_inlineTags = $inlineTags;
@@ -191,6 +201,7 @@ abstract class AData
         $this->_see = $see;
         $this->_since = $since;
         $this->_todo = $todo;
+        $this->_usedBy = $usedBy;
         $this->_uses = $uses;
         $this->_version = $version;
     }
@@ -334,6 +345,17 @@ abstract class AData
     public function getTodoTags(): array
     {
         return $this->_todo;
+    }
+
+    /**
+     * Returns the used-by-tags.
+     *
+     * @return UsedByTag[]
+     *   The used-by-tags
+     */
+    public function getUsedByTags(): array
+    {
+        return $this->_uses;
     }
 
     /**

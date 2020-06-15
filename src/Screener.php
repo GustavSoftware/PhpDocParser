@@ -55,6 +55,7 @@ class Screener extends AScreener
         "throws" => Lexer::T_THROWS_TAG,
         "todo" => Lexer::T_TODO_TAG,
         "uses" => Lexer::T_USES_TAG,
+        "used" => Lexer::T_USED_BY_TAG,
         "var" => Lexer::T_VAR_TAG,
         "version" => Lexer::T_VERSION_TAG
     ];
@@ -360,6 +361,28 @@ class Screener extends AScreener
                 }
             } elseif($next2) {
                 $this->_lexer->resetPosition($this->_lexer->getPosition()-1);
+            }
+        } elseif($type == Lexer::T_USED_BY_TAG) {
+            $next2 = $this->_moveLexer();
+            if($next2 && $next2->getType() == Lexer::T_MINUS) {
+                $next3 = $this->_moveLexer();
+                if($next3) {
+                    if(trim(strtolower($next3->getValue())) != "by") {
+                        $type = Lexer::T_STRING;
+                        $value .= $next2->getValue();
+                        $this->_lexer->resetPosition($this->_lexer->getPosition()-1);
+                    } else {
+                        $value .= "-by";
+                    }
+                } else {
+                    $type = Lexer::T_STRING;
+                    $value .= $next2->getValue();
+                }
+            } else {
+                $type = Lexer::T_STRING;
+                if($next2) {
+                    $this->_lexer->resetPosition($this->_lexer->getPosition()-1);
+                }
             }
         }
 

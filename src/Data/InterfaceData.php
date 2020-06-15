@@ -32,6 +32,7 @@ use Gustav\PhpDocParser\Tags\PackageTag;
 use Gustav\PhpDocParser\Tags\SeeTag;
 use Gustav\PhpDocParser\Tags\SinceTag;
 use Gustav\PhpDocParser\Tags\TodoTag;
+use Gustav\PhpDocParser\Tags\UsedByTag;
 use Gustav\PhpDocParser\Tags\UsesTag;
 use Gustav\PhpDocParser\Tags\VersionTag;
 use ReflectionClass;
@@ -117,6 +118,8 @@ class InterfaceData extends AData
      *   The since-tags
      * @param TodoTag[] $todo
      *   The todo-tags
+     * @param UsedByTag[] $usedBy
+     *   The used-by-tags
      * @param UsesTag[] $uses
      *   The uses-tags
      * @param VersionTag[] $version
@@ -126,8 +129,8 @@ class InterfaceData extends AData
         ReflectionClass $reflection, array $constants = [], array $methods = [], array $methodTags = [],
         ?PackageTag $package = null, string $description = "", array $inlineTags = [], ?ApiTag $api = null,
         array $author = [], array $copyright = [], ?DeprecatedTag $deprecated = null, ?InheritDocTag $inheritDoc = null,
-        array $internal = [], array $link = [], array $see = [], array $since = [], array $todo = [], array $uses = [],
-        array $version = []
+        array $internal = [], array $link = [], array $see = [], array $since = [], array $todo = [],
+        array $usedBy = [], array $uses = [], array $version = []
     ) {
         $this->_reflection = $reflection;
         $this->_constants = $constants;
@@ -136,7 +139,7 @@ class InterfaceData extends AData
         $this->_package = $package;
         parent::__construct(
             $description, $inlineTags, $api, $author, $copyright, $deprecated, $inheritDoc, $internal, $link, $see,
-            $since, $todo, $uses, $version
+            $since, $todo, $usedBy, $uses, $version
         );
     }
 

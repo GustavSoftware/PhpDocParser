@@ -33,6 +33,7 @@ use Gustav\PhpDocParser\Tags\PropertyTag;
 use Gustav\PhpDocParser\Tags\SeeTag;
 use Gustav\PhpDocParser\Tags\SinceTag;
 use Gustav\PhpDocParser\Tags\TodoTag;
+use Gustav\PhpDocParser\Tags\UsedByTag;
 use Gustav\PhpDocParser\Tags\UsesTag;
 use Gustav\PhpDocParser\Tags\VersionTag;
 use ReflectionClass;
@@ -101,6 +102,8 @@ class ClassData extends InterfaceData
      *   The since-tags
      * @param TodoTag[] $todo
      *   The todo-tags
+     * @param UsedByTag[] $usedBy
+     *   The used-by-tags
      * @param UsesTag[] $uses
      *   The uses-tags
      * @param VersionTag[] $version
@@ -111,13 +114,13 @@ class ClassData extends InterfaceData
         array $properties = [], array $propertyTags = [], ?PackageTag $package = null, string $description = "",
         array $inlineTags = [], ?ApiTag $api = null, array $author = [], array $copyright = [],
         ?DeprecatedTag $deprecated = null, ?InheritDocTag $inheritDoc = null, array $internal = [], array $link = [],
-        array $see = [], array $since = [], array $todo = [], array $uses = [], array $version = []
+        array $see = [], array $since = [], array $todo = [], array $usedBy = [], array $uses = [], array $version = []
     ) {
         $this->_properties = $properties;
         $this->_propertyTags = $propertyTags;
         parent::__construct(
             $reflection, $constants, $methods, $methodTags, $package, $description, $inlineTags, $api, $author,
-            $copyright, $deprecated, $inheritDoc, $internal, $link, $see, $since, $todo, $uses, $version
+            $copyright, $deprecated, $inheritDoc, $internal, $link, $see, $since, $todo, $usedBy, $uses, $version
         );
     }
 

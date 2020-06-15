@@ -33,6 +33,7 @@ use Gustav\PhpDocParser\Tags\SeeTag;
 use Gustav\PhpDocParser\Tags\SinceTag;
 use Gustav\PhpDocParser\Tags\ThrowsTag;
 use Gustav\PhpDocParser\Tags\TodoTag;
+use Gustav\PhpDocParser\Tags\UsedByTag;
 use Gustav\PhpDocParser\Tags\UsesTag;
 use Gustav\PhpDocParser\Tags\VersionTag;
 use ReflectionFunctionAbstract;
@@ -100,6 +101,8 @@ abstract class AFunctionData extends AData
      *   The since-tags
      * @param TodoTag[] $todo
      *   The todo-tags
+     * @param UsedByTag[] $usedBy
+     *   The used-by-tags
      * @param UsesTag[] $uses
      *   The uses-tags
      * @param VersionTag[] $version
@@ -109,14 +112,14 @@ abstract class AFunctionData extends AData
         string $description = "", array $inlineTags = [], array $param = [], ?ReturnTag $return = null,
         array $throws = [], ?ApiTag $api = null, array $author = [], array $copyright = [],
         ?DeprecatedTag $deprecated = null, ?InheritDocTag $inheritDoc = null, array $internal = [], array $link = [],
-        array $see = [], array $since = [], array $todo = [], array $uses = [], array $version = []
+        array $see = [], array $since = [], array $todo = [], array $usedBy = [], array $uses = [], array $version = []
     ) {
         $this->_param = $param;
         $this->_return = $return;
         $this->_throws = $throws;
         parent::__construct(
             $description, $inlineTags, $api, $author, $copyright, $deprecated, $inheritDoc, $internal, $link, $see,
-            $since, $todo, $uses, $version
+            $since, $todo, $usedBy, $uses, $version
         );
     }
 

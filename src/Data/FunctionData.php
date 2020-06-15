@@ -32,6 +32,7 @@ use Gustav\PhpDocParser\Tags\SeeTag;
 use Gustav\PhpDocParser\Tags\SinceTag;
 use Gustav\PhpDocParser\Tags\ThrowsTag;
 use Gustav\PhpDocParser\Tags\TodoTag;
+use Gustav\PhpDocParser\Tags\UsedByTag;
 use Gustav\PhpDocParser\Tags\UsesTag;
 use Gustav\PhpDocParser\Tags\VersionTag;
 use ReflectionFunction;
@@ -85,6 +86,8 @@ class FunctionData extends AFunctionData
      *   The since-tags
      * @param TodoTag[] $todo
      *   The todo-tags
+     * @param UsedByTag[] $usedBy
+     *   The used-by-tags
      * @param UsesTag[] $uses
      *   The uses-tags
      * @param VersionTag[] $version
@@ -94,12 +97,12 @@ class FunctionData extends AFunctionData
         ReflectionFunction $reflection, string $description = "", array $inlineTags = [], array $param = [],
         ?ReturnTag $return = null, array $throws = [], ?ApiTag $api = null, array $author = [], array $copyright = [],
         ?DeprecatedTag $deprecated = null, array $internal = [], array $link = [], array $see = [], array $since = [],
-        array $todo = [], array $uses = [], array $version = []
+        array $todo = [], array $usedBy = [], array $uses = [], array $version = []
     ) {
         $this->_reflection = $reflection;
         parent::__construct(
             $description, $inlineTags, $param, $return, $throws, $api, $author, $copyright, $deprecated, null,
-            $internal, $link, $see, $since, $todo, $uses, $version
+            $internal, $link, $see, $since, $todo, $usedBy, $uses, $version
         );
     }
 
